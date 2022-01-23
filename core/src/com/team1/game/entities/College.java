@@ -17,7 +17,7 @@ public class College {
     }
 
     public void setCell(Cell cell) {
-        this.cell = cell;
+        this.cell = cell; 
     }
 
 }

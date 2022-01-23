@@ -112,7 +112,7 @@ public class Play implements Screen {
             renderer.getBatch().end();
         } */
 
-        // TODO Make movement more fluid - A* stuff
+        // TODO Make movement more fluid - e.g A*
         // Make it look better , e.g have player move through tiles
 
         // Add properties for enemy college or something on tile, also do stuff with different waters

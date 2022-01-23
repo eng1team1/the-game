@@ -32,7 +32,7 @@ public class Player extends Sprite {
     }
 
     public void moveTo(Vector3 mousePos) {
-        // might want to use https://github.com/xaguzman/pathfinding for pathfinding, woudl have to reconfigure some of the tiledmap stuff but its just different classes
+        // might want to use https://github.com/xaguzman/pathfinding for pathfinding, would have to reconfigure some of the tiledmap stuff but its just different classes
         // or could just create a duplicate graph and run A* on that then tell paly to move to the tiles corresponding to it.
         int col = Math.round(Math.round(mousePos.x) / Play.TILE_SIZE);
         int row = Math.round(Math.round(mousePos.y) / Play.TILE_SIZE);
