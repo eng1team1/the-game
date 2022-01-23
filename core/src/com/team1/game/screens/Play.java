@@ -1,5 +1,5 @@
 package com.team1.game.screens;
-
+ 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -9,7 +9,10 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.team1.game.TiledMapStage;
+import com.team1.game.entities.College;
 import com.team1.game.entities.Player;
+
+import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -24,6 +27,7 @@ public class Play implements Screen {
     public static final int TILE_SIZE = 64;
 
     private Player player;
+    private ArrayList<College> colleges;
 
     OrthographicCamera camera;
     private float moveSpeed = 100;
@@ -47,7 +51,9 @@ public class Play implements Screen {
 
         camera = new OrthographicCamera();
         camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
-        camera.update();
+        camera.update();   
+
+        initColleges(movementLayer);
         
         player = new Player(new Sprite(new Texture("img/player.png")), movementLayer);
 
@@ -59,6 +65,7 @@ public class Play implements Screen {
 
     @Override
     public void render(float delta) {
+        //#region Camera Movement
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             camera.translate(0, moveSpeed * Gdx.graphics.getDeltaTime());
         } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
@@ -77,7 +84,7 @@ public class Play implements Screen {
         else if(Gdx.input.isKeyPressed((Input.Keys.DOWN))){
             camera.zoom += zoomSpeed * Gdx.graphics.getDeltaTime();
         }
-
+        //#endregion
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -105,14 +112,14 @@ public class Play implements Screen {
             renderer.getBatch().end();
         } */
 
-        // TODO probably a better way to do the movement e.g. stage, actor, and listeners
+        // TODO Make movement more fluid - e.g A*
+        // Make it look better , e.g have player move through tiles
 
         // Add properties for enemy college or something on tile, also do stuff with different waters
 
         // Add stats and stuff to player and colleges
-        // MAKE COLLEGE
 
-        // Add combat for colleges - use ui pop up e.g. click college, choose to fight etc.
+        // Add combat for colleges - right click college to target and start attacking
 
         // Add RNG e.g. make multiple maps and randomly choose which one to load
         // also random amount of xp
@@ -120,8 +127,6 @@ public class Play implements Screen {
         // Upgrades?
 
         // Help system
-
-        // Make it look better , e.g have player move through tiles
 
         // Sort camera ?
         
@@ -136,6 +141,19 @@ public class Play implements Screen {
         camera.viewportHeight = height;
         camera.update();
         
+    }
+
+    private void initColleges(TiledMapTileLayer tiledLayer) {
+        for (int x = 0; x < tiledLayer.getWidth(); x++) {
+            for (int y = 0; y < tiledLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = tiledLayer.getCell(x, y);
+                if (cell.getTile().getProperties().containsKey("college")) {
+                    College college = new College(cell.getTile().getProperties().get("college").toString(), 100, 34);
+                    colleges.add(college);
+                }
+                
+            }
+        }
     }
 
     @Override
