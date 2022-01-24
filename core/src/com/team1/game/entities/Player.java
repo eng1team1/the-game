@@ -6,14 +6,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.team1.game.Combat;
 import com.team1.game.screens.Play;
 
 public class Player extends Sprite {
 
     private TiledMapTileLayer movementLayer;
-
+    
+    Cell collegeCell = null;
+    boolean inCombat = false;
     boolean moveFlag = false;
     private int moveRadius = 4;
 
@@ -59,6 +63,19 @@ public class Player extends Sprite {
 
     public boolean getMoveFlag() {
         return moveFlag;
+    }
+
+    public void startCombat(Cell collegeCell) {
+        inCombat = true;
+        this.collegeCell = collegeCell;
+    }
+
+    public void endCombat() {
+        inCombat = false;
+    }
+
+    public Combat inCombat() {
+        return new Combat(inCombat, collegeCell);
     }
 
     public int getMoveRadius() {

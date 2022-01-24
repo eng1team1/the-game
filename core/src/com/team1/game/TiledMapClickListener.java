@@ -25,7 +25,7 @@ public class TiledMapClickListener extends ClickListener {
         }
 
         if (actor.cell.getTile().getProperties().containsKey("college")) {
-            // fight college stuff
+            player.startCombat(actor.cell);
         }
     }
 }

@@ -1,16 +1,17 @@
 package com.team1.game.screens;
  
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.team1.game.Combat;
 import com.team1.game.TiledMapStage;
 import com.team1.game.entities.College;
 import com.team1.game.entities.Player;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 
 import java.util.ArrayList;
 
@@ -20,7 +21,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Play implements Screen {
 
@@ -40,6 +40,8 @@ public class Play implements Screen {
     private TiledMapTileLayer movementLayer;
     private OrthogonalTiledMapRenderer renderer;
 
+    private boolean foundCollegeInCombat = false;
+
     @Override
     public void show() {
         TmxMapLoader loader = new TmxMapLoader();
@@ -52,6 +54,8 @@ public class Play implements Screen {
         camera = new OrthographicCamera();
         camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
         camera.update();   
+
+        colleges = new ArrayList<College>();
 
         initColleges(movementLayer);
         
@@ -100,17 +104,26 @@ public class Play implements Screen {
             player.moveTo(mousePos);
             renderer.getBatch().end();
             player.setMoveFlag(false);
+            player.endCombat();
+            foundCollegeInCombat = false;
         }
         
-        /*
-        if (Gdx.input.isButtonJustPressed(Buttons.LEFT)) {
-            camera.unproject(mousePos.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-            System.out.println("X Input: " + mousePos.x);
+        Combat combat = player.inCombat();
+        if (combat.getInCombat()) {
+            Cell collegeCell = combat.getCollegeCell();
 
-            renderer.getBatch().begin();
-            player.moveTo(mousePos);
-            renderer.getBatch().end();
-        } */
+            if (!foundCollegeInCombat) {
+                for (int i = 0; i < colleges.size(); i++) {
+                    System.out.println(collegeCell + " :: " + colleges.get(i).getCell());
+                    if (collegeCell == colleges.get(i).getCell()) {
+                        System.out.println("college: " + colleges.get(i).name);
+                        foundCollegeInCombat = true;
+                    }
+                }
+            }
+
+            
+        }
 
         // TODO Make movement more fluid - e.g A*
         // Make it look better , e.g have player move through tiles
@@ -149,12 +162,14 @@ public class Play implements Screen {
                 TiledMapTileLayer.Cell cell = tiledLayer.getCell(x, y);
                 if (cell.getTile().getProperties().containsKey("college")) {
                     College college = new College(cell.getTile().getProperties().get("college").toString(), 100, 34);
+                    college.setCell(cell);
                     colleges.add(college);
-                }
-                
+                }   
             }
         }
     }
+
+
 
     @Override
     public void pause() {

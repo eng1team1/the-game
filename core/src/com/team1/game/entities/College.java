@@ -20,4 +20,8 @@ public class College {
         this.cell = cell; 
     }
 
+    public Cell getCell() {
+        return cell;
+    }
+
 }
