@@ -21,6 +21,10 @@ public class Player extends Sprite {
     boolean moveFlag = false;
     private int moveRadius = 4;
 
+    int health = 100;
+    int attackDmg = 20;
+    // int moveSpeed = 1; // possibly? for when better movement has been implemented
+
     public Player(Sprite sprite, TiledMapTileLayer movementLayer) {
         super(sprite);
         this.movementLayer = movementLayer;
@@ -41,15 +45,7 @@ public class Player extends Sprite {
         int col = Math.round(Math.round(mousePos.x) / Play.TILE_SIZE);
         int row = Math.round(Math.round(mousePos.y) / Play.TILE_SIZE);
 
-        int currCol = Math.round(Math.round(getX()) / Play.TILE_SIZE);
-        int currRow = Math.round(Math.round(getY()) / Play.TILE_SIZE);;
-
-        int moveRadius = getMoveRadius();
-
-        // Euclidean
-        int dist = (int) Math.round(Math.sqrt(Math.pow(col - currCol, 2) + Math.pow(row - currRow, 2)));
-
-        boolean canMove = movementLayer.getCell(col, row).getTile().getProperties().containsKey("traversable") && (dist < moveRadius);
+        boolean canMove = movementLayer.getCell(col, row).getTile().getProperties().containsKey("traversable") && canReach(mousePos);
 
         if (canMove) {
             setX(col * Play.TILE_SIZE);
@@ -57,6 +53,21 @@ public class Player extends Sprite {
         }
     }
 
+    public boolean canReach(Vector3 pos) {
+        int col = Math.round(Math.round(pos.x) / Play.TILE_SIZE);
+        int row = Math.round(Math.round(pos.y) / Play.TILE_SIZE);
+
+        int currCol = Math.round(Math.round(getX()) / Play.TILE_SIZE);
+        int currRow = Math.round(Math.round(getY()) / Play.TILE_SIZE);;
+
+        // Euclidean
+        int dist = (int) Math.round(Math.sqrt(Math.pow(col - currCol, 2) + Math.pow(row - currRow, 2)));
+
+        System.out.println("(" + currCol + ", " + currRow + ") -> (" + col + ", " + row + ") = " + dist);
+
+        return dist < moveRadius;
+    }
+    
     public void setMoveFlag(boolean flag) {
         moveFlag = flag;
     }

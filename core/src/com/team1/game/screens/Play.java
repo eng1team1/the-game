@@ -29,9 +29,14 @@ public class Play implements Screen {
     private Player player;
     private ArrayList<College> colleges;
 
-    OrthographicCamera camera;
+    public OrthographicCamera camera;
     private float moveSpeed = 100;
     private float zoomSpeed = 1;
+    // Do this better and also bound zoom
+    private int boundLeft = Gdx.graphics.getWidth() / 2;
+    private int boundRight = 960; // 20 * TILE_SIZE;
+    private int boundBottom = Gdx.graphics.getHeight() / 2;
+    private int boundTop = 1040; // 20 * TILE_SIZE;
 
     private Stage stage;
     private Vector3 mousePos;
@@ -58,27 +63,33 @@ public class Play implements Screen {
         colleges = new ArrayList<College>();
 
         initColleges(movementLayer);
+
+        for (College c : colleges) {
+            System.out.println(c.getCell());
+        }
         
         player = new Player(new Sprite(new Texture("img/player.png")), movementLayer);
 
         mousePos = new Vector3();
 
         stage = new TiledMapStage(map, player);
+        stage.getViewport().setCamera(camera);
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
         //#region Camera Movement
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        System.out.println(camera.position);
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && camera.position.y < boundTop) {
             camera.translate(0, moveSpeed * Gdx.graphics.getDeltaTime());
-        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.S) && camera.position.y > boundBottom) {
             camera.translate(0, -moveSpeed * Gdx.graphics.getDeltaTime());
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.A) && camera.position.x > boundLeft) {
             camera.translate(-moveSpeed * Gdx.graphics.getDeltaTime(), 0);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        } else if (Gdx.input.isKeyPressed(Input.Keys.D) && camera.position.x < boundRight) {
             camera.translate(moveSpeed * Gdx.graphics.getDeltaTime(), 0);
         }
 
@@ -111,7 +122,7 @@ public class Play implements Screen {
         Combat combat = player.inCombat();
         if (combat.getInCombat()) {
             Cell collegeCell = combat.getCollegeCell();
-
+            System.out.println("In combat");
             if (!foundCollegeInCombat) {
                 for (int i = 0; i < colleges.size(); i++) {
                     System.out.println(collegeCell + " :: " + colleges.get(i).getCell());
@@ -120,9 +131,7 @@ public class Play implements Screen {
                         foundCollegeInCombat = true;
                     }
                 }
-            }
-
-            
+            } 
         }
 
         // TODO Make movement more fluid - e.g A*
@@ -164,6 +173,7 @@ public class Play implements Screen {
                     College college = new College(cell.getTile().getProperties().get("college").toString(), 100, 34);
                     college.setCell(cell);
                     colleges.add(college);
+                    System.out.println("College: " + college.name + "X: " + x + " Y: " + y);
                 }   
             }
         }
