@@ -3,10 +3,12 @@ package com.team1.game.entities;
 import javax.swing.SpinnerDateModel;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.team1.game.Combat;
@@ -16,6 +18,8 @@ public class Player extends Sprite {
 
     private TiledMapTileLayer movementLayer;
     
+    public Texture projectileImg;
+
     Cell collegeCell = null;
     boolean inCombat = false;
     boolean moveFlag = false;
@@ -23,11 +27,13 @@ public class Player extends Sprite {
 
     int health = 100;
     int attackDmg = 20;
+    int attckSpd = 1; // Attacks per second
     // int moveSpeed = 1; // possibly? for when better movement has been implemented
 
     public Player(Sprite sprite, TiledMapTileLayer movementLayer) {
         super(sprite);
         this.movementLayer = movementLayer;
+        projectileImg = new Texture("img/cannonball.png");
     }
 
     public void draw(SpriteBatch spriteBatch) {
@@ -79,6 +85,12 @@ public class Player extends Sprite {
     public void startCombat(Cell collegeCell) {
         inCombat = true;
         this.collegeCell = collegeCell;
+    }
+
+    public void shoot(SpriteBatch spriteBatch) {
+        System.out.println("shoot");
+        Projectile proj = new Projectile(new Sprite(projectileImg), movementLayer, this);
+        proj.draw(spriteBatch);
     }
 
     public void endCombat() {

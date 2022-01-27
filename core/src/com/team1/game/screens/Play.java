@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Play implements Screen {
 
@@ -80,7 +81,6 @@ public class Play implements Screen {
     @Override
     public void render(float delta) {
         //#region Camera Movement
-        System.out.println(camera.position);
         if (Gdx.input.isKeyPressed(Input.Keys.W) && camera.position.y < boundTop) {
             camera.translate(0, moveSpeed * Gdx.graphics.getDeltaTime());
         } else if (Gdx.input.isKeyPressed(Input.Keys.S) && camera.position.y > boundBottom) {
@@ -132,6 +132,9 @@ public class Play implements Screen {
                     }
                 }
             } 
+            renderer.getBatch().begin();
+            player.shoot((SpriteBatch) renderer.getBatch());
+            renderer.getBatch().end();
         }
 
         // TODO Make movement more fluid - e.g A*
