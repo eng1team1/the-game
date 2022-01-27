@@ -11,6 +11,7 @@ import com.team1.game.Combat;
 import com.team1.game.TiledMapStage;
 import com.team1.game.entities.College;
 import com.team1.game.entities.Player;
+import com.team1.game.entities.Projectile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 
 import java.util.ArrayList;
@@ -48,6 +49,8 @@ public class Play implements Screen {
 
     private boolean foundCollegeInCombat = false;
 
+    private ArrayList<Projectile> projectilesOnScreen;
+
     @Override
     public void show() {
         TmxMapLoader loader = new TmxMapLoader();
@@ -70,6 +73,8 @@ public class Play implements Screen {
         }
         
         player = new Player(new Sprite(new Texture("img/player.png")), movementLayer);
+
+        projectilesOnScreen = new ArrayList<Projectile>();
 
         mousePos = new Vector3();
 
@@ -133,8 +138,9 @@ public class Play implements Screen {
                 }
             } 
             renderer.getBatch().begin();
-            player.shoot((SpriteBatch) renderer.getBatch());
+            Projectile proj = player.shoot((SpriteBatch) renderer.getBatch());
             renderer.getBatch().end();
+            projectilesOnScreen.add(proj);
         }
 
         // TODO Make movement more fluid - e.g A*
@@ -157,6 +163,9 @@ public class Play implements Screen {
         
         renderer.getBatch().begin();
         player.draw(renderer.getBatch());
+        for (Projectile projectile : projectilesOnScreen) {
+            projectile.draw(renderer.getBatch());
+        }
         renderer.getBatch().end();
     }
 

@@ -87,10 +87,11 @@ public class Player extends Sprite {
         this.collegeCell = collegeCell;
     }
 
-    public void shoot(SpriteBatch spriteBatch) {
+    public Projectile shoot(SpriteBatch spriteBatch) {
         System.out.println("shoot");
         Projectile proj = new Projectile(new Sprite(projectileImg), movementLayer, this);
         proj.draw(spriteBatch);
+        return proj;
     }
 
     public void endCombat() {
