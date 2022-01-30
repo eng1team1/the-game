@@ -27,7 +27,7 @@ public class Player extends Sprite {
 
     int health = 100;
     int attackDmg = 20;
-    int attckSpd = 1; // Attacks per second
+    public int attackSpd = 1; // Attacks per second
     // int moveSpeed = 1; // possibly? for when better movement has been implemented
 
     public Player(Sprite sprite, TiledMapTileLayer movementLayer) {
@@ -87,9 +87,9 @@ public class Player extends Sprite {
         this.collegeCell = collegeCell;
     }
 
-    public Projectile shoot(SpriteBatch spriteBatch) {
+    public Projectile shoot(SpriteBatch spriteBatch, College target, Vector3 loc) {
         System.out.println("shoot");
-        Projectile proj = new Projectile(new Sprite(projectileImg), movementLayer, this);
+        Projectile proj = new Projectile(new Sprite(projectileImg), movementLayer, this, target, loc);
         proj.draw(spriteBatch);
         return proj;
     }

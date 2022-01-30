@@ -16,6 +16,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 
 import java.util.ArrayList;
 
+import javax.swing.plaf.synth.SynthSplitPaneUI;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
@@ -50,6 +52,8 @@ public class Play implements Screen {
     private boolean foundCollegeInCombat = false;
 
     private ArrayList<Projectile> projectilesOnScreen;
+    private double timeUntilNextAttack;
+    double attackSpdDecrement = 0.01;
 
     @Override
     public void show() {
@@ -74,6 +78,7 @@ public class Play implements Screen {
         
         player = new Player(new Sprite(new Texture("img/player.png")), movementLayer);
 
+        timeUntilNextAttack = 0.01;
         projectilesOnScreen = new ArrayList<Projectile>();
 
         mousePos = new Vector3();
@@ -127,20 +132,29 @@ public class Play implements Screen {
         Combat combat = player.inCombat();
         if (combat.getInCombat()) {
             Cell collegeCell = combat.getCollegeCell();
+            College target = null;
             System.out.println("In combat");
             if (!foundCollegeInCombat) {
                 for (int i = 0; i < colleges.size(); i++) {
                     System.out.println(collegeCell + " :: " + colleges.get(i).getCell());
                     if (collegeCell == colleges.get(i).getCell()) {
                         System.out.println("college: " + colleges.get(i).name);
+                        target = colleges.get(i);
                         foundCollegeInCombat = true;
                     }
                 }
             } 
-            renderer.getBatch().begin();
-            Projectile proj = player.shoot((SpriteBatch) renderer.getBatch());
-            renderer.getBatch().end();
-            projectilesOnScreen.add(proj);
+
+            timeUntilNextAttack -= attackSpdDecrement;
+            // System.out.println("time until next attack: " + timeUntilNextAttack);
+            if (timeUntilNextAttack <= 0) {
+                renderer.getBatch().begin();
+                Projectile proj = player.shoot((SpriteBatch) renderer.getBatch(), target, camera.unproject(mousePos.set(Gdx.input.getX(), Gdx.input.getY(), 0)));
+                renderer.getBatch().end();
+                projectilesOnScreen.add(proj);
+                timeUntilNextAttack = (double) player.attackSpd;
+            }
+            
         }
 
         // TODO Make movement more fluid - e.g A*
@@ -150,7 +164,7 @@ public class Play implements Screen {
 
         // Add stats and stuff to player and colleges
 
-        // Add combat for colleges - right click college to target and start attacking
+        // Add combat for colleges - left click college to target and start attacking
 
         // Add RNG e.g. make multiple maps and randomly choose which one to load
         // also random amount of xp
@@ -160,11 +174,24 @@ public class Play implements Screen {
         // Help system
 
         // Sort camera ?
+
+        // System.out.println("projectile count: " + projectilesOnScreen.size());
         
         renderer.getBatch().begin();
         player.draw(renderer.getBatch());
-        for (Projectile projectile : projectilesOnScreen) {
-            projectile.draw(renderer.getBatch());
+        for (int i = 0; i < projectilesOnScreen.size(); i++) {
+            Projectile projectile = projectilesOnScreen.get(i);
+            System.out.println("projectiles loop");
+            // projectile.draw(renderer.getBatch());
+            projectile.update(Gdx.graphics.getDeltaTime(), (SpriteBatch) renderer.getBatch());
+
+            if (projectile.getX() > boundRight || projectile.getX() < 0) {
+                projectilesOnScreen.remove(i);
+            } 
+
+            if (projectile.getY() > boundTop || projectile.getY() < 0) {
+                projectilesOnScreen.remove(i);
+            }
         }
         renderer.getBatch().end();
     }
@@ -216,7 +243,9 @@ public class Play implements Screen {
         map.dispose();
         renderer.dispose();
         player.getTexture().dispose();
-        
+        for (Projectile projectile : projectilesOnScreen) {
+            projectile.getTexture().dispose();
+        }
     }
     
 

@@ -24,4 +24,8 @@ public class College {
         return cell;
     }
 
+    public void hit() {
+        
+    }
+
 }
