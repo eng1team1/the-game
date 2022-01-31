@@ -129,9 +129,38 @@ public class Play implements Screen {
             player.setMoveFlag(false);
             player.endCombat();
             foundCollegeInCombat = false;
+            player.beingAttacked = null;
+            for (int i = 0; i < colleges.size(); i++) {
+                College college = colleges.get(i);
+
+                if (college.playerInRange(player)) {
+                    college.attack(player);
+                }
+            }
             // Check if in a college's attack range, if so college start attacking
         }
         
+        if (player.beingAttacked != null) {
+            if (player.beingAttacked.getInCombat()) {
+                College college = null;
+                for (College c : colleges) {
+                    if (c.getCell().equals(player.beingAttacked.getCollegeCell())) {
+                        college = c;
+                    }
+                }
+
+                college.timeUntilNextAttack -= attackSpdDecrement;
+                // System.out.println("time until next attack: " + timeUntilNextAttack);
+                if (college.timeUntilNextAttack <= 0) {
+                    renderer.getBatch().begin();
+                    System.out.println("target: " + target);
+                    Projectile proj = college.shoot((SpriteBatch) renderer.getBatch(), player, player.beingAttacked.getTargetPos(), new Texture("img/cannonball.png"), movementLayer);
+                    renderer.getBatch().end();
+                    projectilesOnScreen.add(proj);
+                    college.timeUntilNextAttack = college.attackSpd;
+                }
+            }
+        }
         Combat combat = player.inCombat();
         if (combat.getInCombat()) {
             Cell collegeCell = combat.getCollegeCell();
@@ -152,7 +181,7 @@ public class Play implements Screen {
             if (timeUntilNextAttack <= 0) {
                 renderer.getBatch().begin();
                 System.out.println("target: " + target);
-                Projectile proj = player.shoot((SpriteBatch) renderer.getBatch(), target, combat.getTargetPos()); // new Vector3(mousePos.x, mousePos.y, 0));
+                Projectile proj = player.shoot((SpriteBatch) renderer.getBatch(), target, combat.getTargetPos());
                 renderer.getBatch().end();
                 projectilesOnScreen.add(proj);
                 timeUntilNextAttack = (double) player.attackSpd;
@@ -163,7 +192,7 @@ public class Play implements Screen {
         // TODO Make movement more fluid - e.g A*
         // Make it look better , e.g have player move through tiles
 
-        // Add properties for enemy college or something on tile, also do stuff with different waters
+        // Add properties for enemy college or something on tile, also do stuff with different waters - in blue water college can attack?
 
         // Add stats and stuff to player and colleges
 
@@ -219,6 +248,7 @@ public class Play implements Screen {
                 if (cell.getTile().getProperties().containsKey("college")) {
                     College college = new College(cell.getTile().getProperties().get("college").toString(), 100, 34);
                     college.setCell(cell);
+                    college.setTilePos(x, y);
                     colleges.add(college);
                     System.out.println("College: " + college.name + "X: " + x + " Y: " + y);
                 }   

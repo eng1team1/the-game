@@ -24,11 +24,13 @@ public class Player extends Sprite {
     Cell collegeCell = null;
     boolean inCombat = false;
     boolean moveFlag = false;
+    public Combat beingAttacked = null;
     private int moveRadius = 4;
 
-    int health = 100;
-    int attackDmg = 20;
-    public int attackSpd = 1; 
+    public boolean isDestroyed = false;
+    public int health = 100;
+    public int attackDmg = 20;
+    public double attackSpd = 1; 
     // int moveSpeed = 1; // possibly? for when better movement has been implemented
 
     public Player(Sprite sprite, TiledMapTileLayer movementLayer) {
@@ -94,7 +96,7 @@ public class Player extends Sprite {
 
     public Projectile shoot(SpriteBatch spriteBatch, College target, Vector3 targetPos) {
         System.out.println("shoot");
-        Projectile proj = new Projectile(new Sprite(projectileImg), movementLayer, this, target, targetPos);
+        Projectile proj = new Projectile(new Sprite(projectileImg), movementLayer, this, target, targetPos, true);
         proj.draw(spriteBatch);
         return proj;
     }
@@ -109,6 +111,16 @@ public class Player extends Sprite {
 
     public int getMoveRadius() {
         return moveRadius;
+    }
+
+    public void hit(int dmg) {
+        health -= dmg;
+        System.out.println("Hit, health: " + health);
+
+        if (health <= 0) {
+            isDestroyed = true;
+            // destroy sprite
+        }
     }
 
 }

@@ -11,24 +11,34 @@ import com.team1.game.screens.Play;
 public class Projectile extends Sprite {
 
     private TiledMapTileLayer movementLayer;
-    private Player player;
-    private College target;
+    private Object sender;
+    private Object target;
     private Vector3 startPos;
     private Vector3 targetPos;
+    private boolean sentByPlayer;
 
     public boolean shouldRemove = false;
 
     private int velocity = 20;
     
-    public Projectile(Sprite sprite, TiledMapTileLayer movementLayer, Player player, College target, Vector3 targetPos) {
+    public Projectile(Sprite sprite, TiledMapTileLayer movementLayer, Object sender, Object target, Vector3 targetPos, boolean sentByPlayer) {
         super(sprite);
         this.movementLayer = movementLayer;
-        this.player = player;
+        this.sender = sender;
         this.target = target;
-        this.targetPos = targetPos;
+        /// this.targetPos = targetPos;
+        this.sentByPlayer = sentByPlayer;
         
-        setX(player.getX() + Play.TILE_SIZE / 2);
-        setY(player.getY() + Play.TILE_SIZE / 2);
+        if (sentByPlayer) {
+            setX(((Player) sender).getX() + Play.TILE_SIZE / 2);
+            setY(((Player) sender).getY() + Play.TILE_SIZE / 2);
+            this.targetPos = new Vector3(((College) target).getX() + Play.TILE_SIZE / 2, ((College) target).getY() + Play.TILE_SIZE / 2, 0);
+        } else {
+            setX(((College) sender).getX() + Play.TILE_SIZE / 2);
+            setY(((College) sender).getY() + Play.TILE_SIZE / 2);
+            this.targetPos = new Vector3(((Player) target).getX() + Play.TILE_SIZE / 2, ((Player) target).getY() + Play.TILE_SIZE / 2, 0);
+        }
+        
         startPos = new Vector3(getX(), getY(), 0);
     }
 
@@ -55,15 +65,89 @@ public class Projectile extends Sprite {
         setX(currPos.x);
         setY(currPos.y);
 
-        if (getX() >= targetPos.x && getY() >= targetPos.y) { // better hit detection
-            target.hit(player.attackDmg);
-            if (target.isDestroyed) { 
-                System.out.println("Destroyed");
-                player.endCombat();
-            }
-            shouldRemove = true;
+        // if norm.x is +ve then moving right else moving left
+        // if norm.y is +ve then moving up else moving down
+
+        if (!sentByPlayer) {
+            System.out.println("(" + ((Player) target).getX() + ", " + ((Player) target).getY() + ") :: " + targetPos);
         }
 
+        if (!sentByPlayer) {
+            if ((((Player) target).getX() + Play.TILE_SIZE / 2) != targetPos.x || (((Player) target).getY() + Play.TILE_SIZE / 2) != targetPos.y) {
+                shouldRemove = true;
+            }
+        } else {
+            if (norm.x > 0 && norm.y > 0) {
+                if (getX() >= targetPos.x && getY() >= targetPos.y) {
+                    if (sentByPlayer) {
+                        ((College) target).hit(((Player) sender).attackDmg);
+                        if (((College) target).isDestroyed) { 
+                            System.out.println("Destroyed");
+                            ((Player) sender).endCombat();
+                        }
+                    } else {
+                        ((Player) target).hit(((College) sender).attackDmg);
+                        if (((Player) target).isDestroyed) { 
+                            System.out.println("Destroyed");
+                        }
+                    }
+                    
+                    shouldRemove = true;
+                }
+            } else if (norm.x > 0 && norm.y < 0) {
+                if (getX() >= targetPos.x && getY() <= targetPos.y) { 
+                    if (sentByPlayer) {
+                        ((College) target).hit(((Player) sender).attackDmg);
+                        if (((College) target).isDestroyed) { 
+                            System.out.println("Destroyed");
+                            ((Player) sender).endCombat();
+                        }
+                    } else {
+                        ((Player) target).hit(((College) sender).attackDmg);
+                        if (((Player) target).isDestroyed) { 
+                            System.out.println("Destroyed");
+                        }
+                    }
+                    
+                    shouldRemove = true;
+                }
+            } else if (norm.x < 0 && norm.y > 0) {
+                if (getX() <= targetPos.x && getY() >= targetPos.y) { 
+                    if (sentByPlayer) {
+                        ((College) target).hit(((Player) sender).attackDmg);
+                        if (((College) target).isDestroyed) { 
+                            System.out.println("Destroyed");
+                            ((Player) sender).endCombat();
+                        }
+                    } else {
+                        ((Player) target).hit(((College) sender).attackDmg);
+                        if (((Player) target).isDestroyed) { 
+                            System.out.println("Destroyed");
+                        }
+                    }
+                    
+                    shouldRemove = true;
+                }
+            } else if (norm.x < 0 && norm.y < 0) {
+                if (getX() <= targetPos.x && getY() <= targetPos.y) { // better hit detection needed
+                    if (sentByPlayer) {
+                        ((College) target).hit(((Player) sender).attackDmg);
+                        if (((College) target).isDestroyed) { 
+                            System.out.println("Destroyed");
+                            ((Player) sender).endCombat();
+                        }
+                    } else {
+                        ((Player) target).hit(((College) sender).attackDmg);
+                        if (((Player) target).isDestroyed) { 
+                            System.out.println("Destroyed");
+                        }
+                    }
+                    
+                    shouldRemove = true;
+                }
+            }
+        }
+        
         super.draw(spriteBatch);
     }
 }
