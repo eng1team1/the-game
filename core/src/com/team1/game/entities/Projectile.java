@@ -68,13 +68,15 @@ public class Projectile extends Sprite {
         // if norm.x is +ve then moving right else moving left
         // if norm.y is +ve then moving up else moving down
 
+        // System.out.println("(" + (((Player) target).getX() + Play.TILE_SIZE / 2) + ", " + (((Player) target).getY() + Play.TILE_SIZE / 2) + ") :: " + targetPos + " :: " + currPos);
+
         // Need to check if player is target as if so then delete projectile if player moves.
         if (!sentByPlayer) {
             if ((((Player) target).getX() + Play.TILE_SIZE / 2) != targetPos.x || (((Player) target).getY() + Play.TILE_SIZE / 2) != targetPos.y) {
                 shouldRemove = true;
             }
         } 
-        if (norm.x > 0 && norm.y > 0) {
+        if (norm.x >= 0 && norm.y >= 0) {
             if (getX() >= targetPos.x && getY() >= targetPos.y) {
                 if (sentByPlayer) {
                     ((College) target).hit(((Player) sender).attackDmg);
@@ -91,7 +93,7 @@ public class Projectile extends Sprite {
                     
                 shouldRemove = true;
             }
-        } else if (norm.x > 0 && norm.y < 0) {
+        } else if (norm.x >= 0 && norm.y <= 0) {
             if (getX() >= targetPos.x && getY() <= targetPos.y) { 
                 if (sentByPlayer) {
                     ((College) target).hit(((Player) sender).attackDmg);
@@ -108,7 +110,7 @@ public class Projectile extends Sprite {
                     
                 shouldRemove = true;
             }
-        } else if (norm.x < 0 && norm.y > 0) {
+        } else if (norm.x <= 0 && norm.y >= 0) {
             if (getX() <= targetPos.x && getY() >= targetPos.y) { 
                 if (sentByPlayer) {
                     ((College) target).hit(((Player) sender).attackDmg);
@@ -125,7 +127,7 @@ public class Projectile extends Sprite {
                     
                 shouldRemove = true;
             }
-        } else if (norm.x < 0 && norm.y < 0) {
+        } else if (norm.x <= 0 && norm.y <= 0) {
             if (getX() <= targetPos.x && getY() <= targetPos.y) {
                 if (sentByPlayer) {
                     ((College) target).hit(((Player) sender).attackDmg);
