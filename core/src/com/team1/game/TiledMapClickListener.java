@@ -42,7 +42,7 @@ public class TiledMapClickListener extends ClickListener {
             System.out.println("clicked college");
             System.out.println(player.canReach(pos));
             if (player.canReach(pos)) {
-                player.startCombat(actor.cell);
+                player.startCombat(actor.cell, pos);
             }
         }
     }

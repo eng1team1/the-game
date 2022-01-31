@@ -116,12 +116,12 @@ public class Play implements Screen {
         camera.update();
         renderer.setView(camera);
         renderer.render();
-
         stage.act();
 
         if (player.getMoveFlag()) {
             camera.unproject(mousePos.set(Gdx.input.getX(), Gdx.input.getY(), 0));
             renderer.getBatch().begin();
+            System.out.println("moveTo mousePos: " + mousePos);
             player.moveTo(mousePos);
             renderer.getBatch().end();
             player.setMoveFlag(false);
@@ -149,7 +149,8 @@ public class Play implements Screen {
             // System.out.println("time until next attack: " + timeUntilNextAttack);
             if (timeUntilNextAttack <= 0) {
                 renderer.getBatch().begin();
-                Projectile proj = player.shoot((SpriteBatch) renderer.getBatch(), target, camera.unproject(mousePos.set(Gdx.input.getX(), Gdx.input.getY(), 0)));
+                System.out.println("mousePos: " + mousePos);
+                Projectile proj = player.shoot((SpriteBatch) renderer.getBatch(), target, combat.getTargetPos()); // new Vector3(mousePos.x, mousePos.y, 0));
                 renderer.getBatch().end();
                 projectilesOnScreen.add(proj);
                 timeUntilNextAttack = (double) player.attackSpd;
@@ -182,6 +183,7 @@ public class Play implements Screen {
         for (int i = 0; i < projectilesOnScreen.size(); i++) {
             Projectile projectile = projectilesOnScreen.get(i);
             System.out.println("projectiles loop");
+            System.out.println("mousePos: " + mousePos);
             // projectile.draw(renderer.getBatch());
             projectile.update(Gdx.graphics.getDeltaTime(), (SpriteBatch) renderer.getBatch());
 
@@ -190,6 +192,10 @@ public class Play implements Screen {
             } 
 
             if (projectile.getY() > boundTop || projectile.getY() < 0) {
+                projectilesOnScreen.remove(i);
+            }
+
+            if (projectile.shouldRemove) {
                 projectilesOnScreen.remove(i);
             }
         }

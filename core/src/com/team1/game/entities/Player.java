@@ -20,6 +20,7 @@ public class Player extends Sprite {
     
     public Texture projectileImg;
 
+    Vector3 targetPos;
     Cell collegeCell = null;
     boolean inCombat = false;
     boolean moveFlag = false;
@@ -27,7 +28,7 @@ public class Player extends Sprite {
 
     int health = 100;
     int attackDmg = 20;
-    public int attackSpd = 1; // Attacks per second
+    public int attackSpd = 100; 
     // int moveSpeed = 1; // possibly? for when better movement has been implemented
 
     public Player(Sprite sprite, TiledMapTileLayer movementLayer) {
@@ -82,14 +83,15 @@ public class Player extends Sprite {
         return moveFlag;
     }
 
-    public void startCombat(Cell collegeCell) {
+    public void startCombat(Cell collegeCell, Vector3 targetPos) {
         inCombat = true;
         this.collegeCell = collegeCell;
+        this.targetPos = targetPos;
     }
 
-    public Projectile shoot(SpriteBatch spriteBatch, College target, Vector3 loc) {
+    public Projectile shoot(SpriteBatch spriteBatch, College target, Vector3 targetPos) {
         System.out.println("shoot");
-        Projectile proj = new Projectile(new Sprite(projectileImg), movementLayer, this, target, loc);
+        Projectile proj = new Projectile(new Sprite(projectileImg), movementLayer, this, target, targetPos);
         proj.draw(spriteBatch);
         return proj;
     }
@@ -99,7 +101,7 @@ public class Player extends Sprite {
     }
 
     public Combat inCombat() {
-        return new Combat(inCombat, collegeCell);
+        return new Combat(inCombat, collegeCell, targetPos);
     }
 
     public int getMoveRadius() {

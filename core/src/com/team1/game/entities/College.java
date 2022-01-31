@@ -24,8 +24,9 @@ public class College {
         return cell;
     }
 
-    public void hit() {
-        
+    public void hit(int dmg) {
+        health -= dmg;
+        System.out.println("Hit");
     }
 
 }

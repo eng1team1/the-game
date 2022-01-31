@@ -13,6 +13,7 @@ public class Projectile extends Sprite {
     private TiledMapTileLayer movementLayer;
     private Player player;
     private College target;
+    private Vector3 startPos;
     private Vector3 targetPos;
 
     public boolean shouldRemove = false;
@@ -28,6 +29,7 @@ public class Projectile extends Sprite {
         
         setX(player.getX() + Play.TILE_SIZE / 2);
         setY(player.getY() + Play.TILE_SIZE / 2);
+        startPos = new Vector3(getX(), getY(), 0);
     }
 
     public void draw(SpriteBatch spriteBatch) {
@@ -43,16 +45,21 @@ public class Projectile extends Sprite {
         
         Vector3 currPos = new Vector3(getX(), getY(), 0);
 
-        Vector3 norm = targetPos.sub(currPos).nor();
+        System.out.println("targetPos: " + targetPos);
+        Vector3 norm = new Vector3(targetPos.x, targetPos.y, 0);
+        norm = norm.sub(startPos).nor();
 
-        currPos.add(norm.scl(-velocity * Gdx.graphics.getDeltaTime()));
+        System.out.println("startPos: " + startPos + " currPos: " + currPos + " , targetPos: " + targetPos + " , norm: " + norm);
+
+        currPos.add(norm.scl(velocity * Gdx.graphics.getDeltaTime()));
         setX(currPos.x);
         setY(currPos.y);
-        /* 
-        float temp = getX() + velocity * delta;
-        System.out.println(temp + " = " + getX() + " + " + velocity + " * " + delta);
-        setX(temp);
-        System.out.println("setX(temp).  getX(): " + getX()); */
+
+        /* if (getX() <= targetPos.x && getY() <= targetPos.y) {
+            shouldRemove = true;
+            target.hit(player.attackDmg);
+        } */
+
         super.draw(spriteBatch);
     }
 
