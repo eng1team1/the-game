@@ -40,27 +40,30 @@ public class Projectile extends Sprite {
 
     public void update(float delta, SpriteBatch spriteBatch) {
         // projectile movement and stuff
-        System.out.println("projectile - update");
-        System.out.println("X: " + getX() + ", Y: " + getY());
+        // System.out.println("projectile - update");
+        /// System.out.println("X: " + getX() + ", Y: " + getY());
         
         Vector3 currPos = new Vector3(getX(), getY(), 0);
 
-        System.out.println("targetPos: " + targetPos);
+        // System.out.println("targetPos: " + targetPos);
         Vector3 norm = new Vector3(targetPos.x, targetPos.y, 0);
         norm = norm.sub(startPos).nor();
 
-        System.out.println("startPos: " + startPos + " currPos: " + currPos + " , targetPos: " + targetPos + " , norm: " + norm);
+        // System.out.println("startPos: " + startPos + " currPos: " + currPos + " , targetPos: " + targetPos + " , norm: " + norm);
 
         currPos.add(norm.scl(velocity * Gdx.graphics.getDeltaTime()));
         setX(currPos.x);
         setY(currPos.y);
 
-        /* if (getX() <= targetPos.x && getY() <= targetPos.y) {
-            shouldRemove = true;
+        if (getX() >= targetPos.x && getY() >= targetPos.y) { // better hit detection
             target.hit(player.attackDmg);
-        } */
+            if (target.isDestroyed) { 
+                System.out.println("Destroyed");
+                player.endCombat();
+            }
+            shouldRemove = true;
+        }
 
         super.draw(spriteBatch);
     }
-
 }

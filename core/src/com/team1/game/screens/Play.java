@@ -17,6 +17,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import java.util.ArrayList;
 
 import javax.swing.plaf.synth.SynthSplitPaneUI;
+import javax.swing.text.html.parser.TagElement;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -49,6 +50,7 @@ public class Play implements Screen {
     private TiledMapTileLayer movementLayer;
     private OrthogonalTiledMapRenderer renderer;
 
+    private College target = null;
     private boolean foundCollegeInCombat = false;
 
     private ArrayList<Projectile> projectilesOnScreen;
@@ -127,13 +129,13 @@ public class Play implements Screen {
             player.setMoveFlag(false);
             player.endCombat();
             foundCollegeInCombat = false;
+            // Check if in a college's attack range, if so college start attacking
         }
         
         Combat combat = player.inCombat();
         if (combat.getInCombat()) {
             Cell collegeCell = combat.getCollegeCell();
-            College target = null;
-            System.out.println("In combat");
+            // System.out.println("In combat");
             if (!foundCollegeInCombat) {
                 for (int i = 0; i < colleges.size(); i++) {
                     System.out.println(collegeCell + " :: " + colleges.get(i).getCell());
@@ -149,7 +151,7 @@ public class Play implements Screen {
             // System.out.println("time until next attack: " + timeUntilNextAttack);
             if (timeUntilNextAttack <= 0) {
                 renderer.getBatch().begin();
-                System.out.println("mousePos: " + mousePos);
+                System.out.println("target: " + target);
                 Projectile proj = player.shoot((SpriteBatch) renderer.getBatch(), target, combat.getTargetPos()); // new Vector3(mousePos.x, mousePos.y, 0));
                 renderer.getBatch().end();
                 projectilesOnScreen.add(proj);
@@ -182,8 +184,8 @@ public class Play implements Screen {
         player.draw(renderer.getBatch());
         for (int i = 0; i < projectilesOnScreen.size(); i++) {
             Projectile projectile = projectilesOnScreen.get(i);
-            System.out.println("projectiles loop");
-            System.out.println("mousePos: " + mousePos);
+            // System.out.println("projectiles loop");
+            // System.out.println("mousePos: " + mousePos);
             // projectile.draw(renderer.getBatch());
             projectile.update(Gdx.graphics.getDeltaTime(), (SpriteBatch) renderer.getBatch());
 

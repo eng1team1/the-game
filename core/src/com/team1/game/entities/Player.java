@@ -28,7 +28,7 @@ public class Player extends Sprite {
 
     int health = 100;
     int attackDmg = 20;
-    public int attackSpd = 100; 
+    public int attackSpd = 1; 
     // int moveSpeed = 1; // possibly? for when better movement has been implemented
 
     public Player(Sprite sprite, TiledMapTileLayer movementLayer) {
@@ -54,6 +54,8 @@ public class Player extends Sprite {
 
         boolean canMove = movementLayer.getCell(col, row).getTile().getProperties().containsKey("traversable") && canReach(mousePos);
 
+        System.out.println("canMove: " + canMove);
+
         if (canMove) {
             setX(col * Play.TILE_SIZE);
             setY(row * Play.TILE_SIZE);
@@ -69,8 +71,9 @@ public class Player extends Sprite {
 
         // Euclidean
         int dist = (int) Math.round(Math.sqrt(Math.pow(col - currCol, 2) + Math.pow(row - currRow, 2)));
-
+        
         System.out.println("(" + currCol + ", " + currRow + ") -> (" + col + ", " + row + ") = " + dist);
+        System.out.println("moveRadius: " + moveRadius);
 
         return dist < moveRadius;
     }
