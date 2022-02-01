@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.team1.game.Combat;
+import com.team1.game.Team1Game;
 import com.team1.game.TiledMapStage;
 import com.team1.game.entities.College;
 import com.team1.game.entities.Player;
@@ -24,12 +25,15 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Play implements Screen {
 
     public static final int TILE_SIZE = 64;
+
+    private Team1Game game;
 
     private Player player;
     private ArrayList<College> colleges;
@@ -46,6 +50,8 @@ public class Play implements Screen {
     private Stage stage;
     private Vector3 mousePos;
 
+    private BitmapFont font = new BitmapFont();
+
     private TiledMap map;
     private TiledMapTileLayer movementLayer;
     private OrthogonalTiledMapRenderer renderer;
@@ -56,6 +62,10 @@ public class Play implements Screen {
     private ArrayList<Projectile> projectilesOnScreen;
     private double timeUntilNextAttack;
     double attackSpdDecrement = 0.01;
+
+    public Play(Team1Game game) {
+        this.game = game;
+    }
 
     @Override
     public void show() {
@@ -119,6 +129,12 @@ public class Play implements Screen {
         renderer.setView(camera);
         renderer.render();
         stage.act();
+
+        for (int i = 0; i < colleges.size(); i++) {
+            if (colleges.get(i).isDestroyed) {
+                colleges.remove(i);
+            }
+        }
 
         if (player.getMoveFlag()) {
             camera.unproject(mousePos.set(Gdx.input.getX(), Gdx.input.getY(), 0));
@@ -230,6 +246,17 @@ public class Play implements Screen {
                 projectilesOnScreen.remove(i);
             }
         }
+
+        if (player.isDestroyed) {
+            game.setScreen(new GameOver(game, false));
+        }
+
+        font.draw(renderer.getBatch(), "Health: " + Integer.toString(player.health), player.getX(), player.getY());
+
+        for (int i = 0; i < colleges.size(); i++) {
+            font.draw(renderer.getBatch(), "Health: " + Integer.toString(colleges.get(i).health), colleges.get(i).getX(), colleges.get(i).getY());
+        }
+
         renderer.getBatch().end();
     }
 
@@ -284,6 +311,7 @@ public class Play implements Screen {
         for (Projectile projectile : projectilesOnScreen) {
             projectile.getTexture().dispose();
         }
+        font.dispose();
     }
     
 

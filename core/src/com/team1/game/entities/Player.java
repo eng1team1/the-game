@@ -119,7 +119,6 @@ public class Player extends Sprite {
 
         if (health <= 0) {
             isDestroyed = true;
-            // destroy sprite
         }
     }
 
