@@ -42,6 +42,8 @@ public class Play implements Screen {
     private Player player;
     private ArrayList<College> colleges;
 
+    private boolean showStartInstructions = true;
+
     public OrthographicCamera camera;
     private float moveSpeed = 100;
     private float zoomSpeed = 1;
@@ -153,6 +155,7 @@ public class Play implements Screen {
         }
 
         if (player.getMoveFlag()) {
+            showStartInstructions = false;
             camera.unproject(mousePos.set(Gdx.input.getX(), Gdx.input.getY(), 0));
             renderer.getBatch().begin();
             System.out.println("moveTo mousePos: " + mousePos);
@@ -265,7 +268,11 @@ public class Play implements Screen {
             game.setScreen(new GameOver(game, false));
         }
 
-        font.draw(renderer.getBatch(), "Objective: Destroy " + objective.name, 0, 0);
+        if (showStartInstructions) {
+            font.draw(renderer.getBatch(), "Instructions\n\n* Left click to move or attack\n* Light blue tiles are within college attack range\n* Movement range: 4", camera.position.x, camera.position.y);
+        }
+
+        font.draw(renderer.getBatch(), "Objective: Destroy " + objective.name, camera.position.x, camera.position.y - 200);
 
         font.draw(renderer.getBatch(), "Health: " + Integer.toString(player.health) + " | XP: " + Integer.toString(player.xp), player.getX(), player.getY());
 
