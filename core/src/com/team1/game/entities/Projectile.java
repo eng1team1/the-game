@@ -82,7 +82,7 @@ public class Projectile extends Sprite {
 
         // System.out.println("(" + (((Player) target).getX() + Play.TILE_SIZE / 2) + ", " + (((Player) target).getY() + Play.TILE_SIZE / 2) + ") :: " + targetPos + " :: " + currPos);
 
-        // System.out.println("norm: " + norm);
+        System.out.println("norm: " + norm);
 
         // Need to check if player is target as if so then delete projectile if player moves.
         if (!sentByPlayer) {
@@ -161,6 +161,8 @@ public class Projectile extends Sprite {
             }
         }
         
+        // System.out.println("shouldRemove: " + shouldRemove);
+
         super.draw(spriteBatch);
     }
 }

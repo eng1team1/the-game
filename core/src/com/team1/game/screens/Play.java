@@ -19,6 +19,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 
 import java.util.ArrayList;
 
+import javax.swing.plaf.synth.SynthDesktopIconUI;
 import javax.swing.plaf.synth.SynthSplitPaneUI;
 import javax.swing.text.html.parser.TagElement;
 
@@ -50,9 +51,9 @@ public class Play implements Screen {
     private float zoomSpeed = 1;
     // Do this better and also bound zoom
     private int boundLeft = Gdx.graphics.getWidth() / 2;
-    private int boundRight = 960; // 20 * TILE_SIZE;
+    private int boundRight = 20 * TILE_SIZE;
     private int boundBottom = Gdx.graphics.getHeight() / 2;
-    private int boundTop = 1040; // 20 * TILE_SIZE;
+    private int boundTop = 20 * TILE_SIZE;
 
     private Stage stage;
     private Vector3 mousePos;
@@ -92,7 +93,7 @@ public class Play implements Screen {
         initColleges(movementLayer);
 
         java.util.Random rand = new java.util.Random();
-        objective = colleges.get(1); // colleges.get(rand.nextInt(3));
+        objective = colleges.get(rand.nextInt(3));
 
         for (College c : colleges) {
             System.out.println(c.getCell());
@@ -254,8 +255,14 @@ public class Play implements Screen {
             // System.out.println("projectiles loop");
             // System.out.println("mousePos: " + mousePos);
             // projectile.draw(renderer.getBatch());
+            System.out.println("Play - projectile loop");
             projectile.update(Gdx.graphics.getDeltaTime(), (SpriteBatch) renderer.getBatch());
 
+            /* System.out.println("Projectile shouldRemove: " + projectile.shouldRemove);
+            System.out.println("x > bR || < 0 " + (projectile.getX() > boundRight || projectile.getX() < 0));
+            System.out.println("getY: " + projectile.getY() + " : boundTop: " + boundTop);
+            System.out.println("y > bT || < 0 " + (projectile.getY() > boundTop || projectile.getY() < 0));
+            */
             if (projectile.getX() > boundRight || projectile.getX() < 0) {
                 projectilesOnScreen.remove(i);
             } 
