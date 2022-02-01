@@ -1,5 +1,7 @@
 package com.team1.game.entities;
 
+import java.util.Random;
+
 import javax.swing.SpinnerDateModel;
 
 import com.badlogic.gdx.Gdx;
@@ -14,6 +16,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.team1.game.Combat;
 import com.team1.game.screens.Play;
 
+/** Class that represents the object the user controls */
 public class Player extends Sprite {
 
     private TiledMapTileLayer movementLayer;
@@ -32,6 +35,7 @@ public class Player extends Sprite {
     public int attackDmg = 20;
     public double attackSpd = 1; 
     // int moveSpeed = 1; // possibly? for when better movement has been implemented
+    public int xp = 0;
 
     public Player(Sprite sprite, TiledMapTileLayer movementLayer) {
         super(sprite);
@@ -39,15 +43,27 @@ public class Player extends Sprite {
         projectileImg = new Texture("img/cannonball.png");
     }
 
+    
+    /** 
+     * @param spriteBatch
+     */
     public void draw(SpriteBatch spriteBatch) {
         // update(Gdx.graphics.getDeltaTime());
         super.draw(spriteBatch);
     }
 
+    
+    /** 
+     * @param delta
+     */
     public void update(float delta) {
         
     }
 
+    
+    /** 
+     * @param mousePos
+     */
     public void moveTo(Vector3 mousePos) {
         // might want to use https://github.com/xaguzman/pathfinding for pathfinding, would have to reconfigure some of the tiledmap stuff but its just different classes
         // or could just create a duplicate graph and run A* on that then tell paly to move to the tiles corresponding to it.
@@ -61,9 +77,17 @@ public class Player extends Sprite {
         if (canMove) {
             setX(col * Play.TILE_SIZE);
             setY(row * Play.TILE_SIZE);
+            
+            Random rand = new Random();
+            xp += 10 + rand.nextInt(40);
         }
     }
 
+    
+    /** 
+     * @param pos
+     * @return boolean
+     */
     public boolean canReach(Vector3 pos) {
         int col = Math.round(Math.round(pos.x) / Play.TILE_SIZE);
         int row = Math.round(Math.round(pos.y) / Play.TILE_SIZE);
@@ -80,20 +104,40 @@ public class Player extends Sprite {
         return dist < moveRadius;
     }
     
+    
+    /** 
+     * @param flag
+     */
     public void setMoveFlag(boolean flag) {
         moveFlag = flag;
     }
 
+    
+    /** 
+     * @return boolean
+     */
     public boolean getMoveFlag() {
         return moveFlag;
     }
 
+    
+    /** 
+     * @param collegeCell
+     * @param targetPos
+     */
     public void startCombat(Cell collegeCell, Vector3 targetPos) {
         inCombat = true;
         this.collegeCell = collegeCell;
         this.targetPos = targetPos;
     }
 
+    
+    /** 
+     * @param spriteBatch
+     * @param target
+     * @param targetPos
+     * @return Projectile
+     */
     public Projectile shoot(SpriteBatch spriteBatch, College target, Vector3 targetPos) {
         System.out.println("shoot");
         Projectile proj = new Projectile(new Sprite(projectileImg), movementLayer, this, target, targetPos, true);
@@ -105,14 +149,26 @@ public class Player extends Sprite {
         inCombat = false;
     }
 
+    
+    /** 
+     * @return Combat
+     */
     public Combat inCombat() {
         return new Combat(inCombat, collegeCell, targetPos);
     }
 
+    
+    /** 
+     * @return int
+     */
     public int getMoveRadius() {
         return moveRadius;
     }
 
+    
+    /** 
+     * @param dmg
+     */
     public void hit(int dmg) {
         health -= dmg;
         System.out.println("Hit, health: " + health);

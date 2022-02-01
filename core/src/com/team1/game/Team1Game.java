@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.team1.game.screens.Play;
 import com.team1.game.screens.Start;
 
+/** Main game class */
 public class Team1Game extends Game {
 
     @Override

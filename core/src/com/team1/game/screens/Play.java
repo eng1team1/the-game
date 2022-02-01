@@ -1,6 +1,7 @@
 package com.team1.game.screens;
  
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ai.btree.decorator.Random;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -29,11 +30,14 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+/** The main playing screen that the user will play on */
 public class Play implements Screen {
 
     public static final int TILE_SIZE = 64;
 
     private Team1Game game;
+
+    public College objective;
 
     private Player player;
     private ArrayList<College> colleges;
@@ -66,7 +70,7 @@ public class Play implements Screen {
     public Play(Team1Game game) {
         this.game = game;
     }
-
+    
     @Override
     public void show() {
         TmxMapLoader loader = new TmxMapLoader();
@@ -84,6 +88,9 @@ public class Play implements Screen {
 
         initColleges(movementLayer);
 
+        java.util.Random rand = new java.util.Random();
+        objective = colleges.get(rand.nextInt(3));
+
         for (College c : colleges) {
             System.out.println(c.getCell());
         }
@@ -100,6 +107,14 @@ public class Play implements Screen {
         Gdx.input.setInputProcessor(stage);
     }
 
+    
+    /** 
+     * Called when the screen renders itself. <br>
+     * 
+     * Contains most game logic such as when to move, when to attack, etc.
+     * 
+     * @param delta
+     */
     @Override
     public void render(float delta) {
         //#region Camera Movement
@@ -132,6 +147,7 @@ public class Play implements Screen {
 
         for (int i = 0; i < colleges.size(); i++) {
             if (colleges.get(i).isDestroyed) {
+                colleges.get(i).stopAttacking(player);
                 colleges.remove(i);
             }
         }
@@ -177,6 +193,9 @@ public class Play implements Screen {
                 }
             }
         }
+        
+        // Chekcs if player is in combat
+        // if in combat, need to find which college player has as target
         Combat combat = player.inCombat();
         if (combat.getInCombat()) {
             Cell collegeCell = combat.getCollegeCell();
@@ -192,9 +211,10 @@ public class Play implements Screen {
                 }
             } 
 
+            // Player shooting at target
             timeUntilNextAttack -= attackSpdDecrement;
             // System.out.println("time until next attack: " + timeUntilNextAttack);
-            if (timeUntilNextAttack <= 0) {
+            if (timeUntilNextAttack <= 0 && !target.isDestroyed) {
                 renderer.getBatch().begin();
                 System.out.println("target: " + target);
                 Projectile proj = player.shoot((SpriteBatch) renderer.getBatch(), target, combat.getTargetPos());
@@ -207,12 +227,6 @@ public class Play implements Screen {
 
         // TODO Make movement more fluid - e.g A*
         // Make it look better , e.g have player move through tiles
-
-        // Add properties for enemy college or something on tile, also do stuff with different waters - in blue water college can attack?
-
-        // Add stats and stuff to player and colleges
-
-        // Add combat for colleges - left click college to target and start attacking
 
         // Add RNG e.g. make multiple maps and randomly choose which one to load
         // also random amount of xp
@@ -251,7 +265,9 @@ public class Play implements Screen {
             game.setScreen(new GameOver(game, false));
         }
 
-        font.draw(renderer.getBatch(), "Health: " + Integer.toString(player.health), player.getX(), player.getY());
+        font.draw(renderer.getBatch(), "Objective: Destroy " + objective.name, 0, 0);
+
+        font.draw(renderer.getBatch(), "Health: " + Integer.toString(player.health) + " | XP: " + Integer.toString(player.xp), player.getX(), player.getY());
 
         for (int i = 0; i < colleges.size(); i++) {
             font.draw(renderer.getBatch(), "Health: " + Integer.toString(colleges.get(i).health), colleges.get(i).getX(), colleges.get(i).getY());
@@ -260,6 +276,11 @@ public class Play implements Screen {
         renderer.getBatch().end();
     }
 
+    
+    /** 
+     * @param width
+     * @param height
+     */
     @Override
     public void resize(int width, int height) {
         camera.viewportWidth = width;
@@ -268,6 +289,13 @@ public class Play implements Screen {
         
     }
 
+    
+    /** 
+     * Initalises the list of colleges by finding tiles with property of college
+     * and creates a new College based on that.
+     * 
+     * @param tiledLayer : Needs the tiled layer to get map width and height
+     */
     private void initColleges(TiledMapTileLayer tiledLayer) {
         for (int x = 0; x < tiledLayer.getWidth(); x++) {
             for (int y = 0; y < tiledLayer.getHeight(); y++) {
@@ -313,6 +341,4 @@ public class Play implements Screen {
         }
         font.dispose();
     }
-    
-
 }

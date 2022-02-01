@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.team1.game.Team1Game;
 
+/** The class for the starting screen the user first sees */
 public class Start implements Screen {
 
     private Team1Game game;
@@ -26,6 +27,11 @@ public class Start implements Screen {
     private OrthographicCamera camera;
     private TextureAtlas atlas;
     protected Skin skin;
+
+    /**
+     * 
+     * @param game : Takes the game class as parameter to allow screen switching
+     */
 
     public Start(Team1Game game) {
         this.game = game;
@@ -81,6 +87,10 @@ public class Start implements Screen {
         stage.addActor(mainTable);
     }
 
+    
+    /** 
+     * @param delta
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(.1f, .12f, .16f, 1);
@@ -90,6 +100,11 @@ public class Start implements Screen {
         stage.draw();
     }
 
+    
+    /** 
+     * @param width
+     * @param height
+     */
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);

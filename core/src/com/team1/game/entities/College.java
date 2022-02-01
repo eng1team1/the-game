@@ -1,5 +1,7 @@
 package com.team1.game.entities;
 
+import java.util.Random;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.team1.game.Combat;
 import com.team1.game.screens.Play;
 
+/** College class represents enemies for player to attack and defend against */
 public class College {
     
     public int health;
@@ -30,20 +33,38 @@ public class College {
         timeUntilNextAttack = attackSpd;
     }
 
+    
+    /** 
+     * @param col
+     * @param row
+     */
     public void setTilePos(int col, int row) {
         this.col = col;
         this.row = row;
     }
 
+    
+    /** 
+     * @param cell
+     */
     public void setCell(Cell cell) {
         this.cell = cell; 
     }
 
+    
+    /** 
+     * @return Cell
+     */
     public Cell getCell() {
         return cell;
     }
 
-    public void hit(int dmg) {
+    
+    /** 
+     * @param dmg
+     * @param player
+     */
+    public void hit(int dmg, Player player) {
         health -= dmg;
         System.out.println("Hit, health: " + health);
 
@@ -53,6 +74,11 @@ public class College {
         }
     }
 
+    
+    /** 
+     * @param player
+     * @return boolean
+     */
     public boolean playerInRange(Player player) {
         int playerCol = Math.round(Math.round(player.getX()) / Play.TILE_SIZE);
         int playerRow = Math.round(Math.round(player.getY()) / Play.TILE_SIZE);
@@ -66,12 +92,25 @@ public class College {
         return dist < attackRange;
     }
 
+    
+    /** 
+     * @param player
+     */
     public void attack(Player player) {
         System.out.println(name + " attacking player");
         player.beingAttacked = new Combat(true, cell, new Vector3(player.getX(), player.getY(), 0));
         System.out.println(player.beingAttacked.getTargetPos());
     }
 
+    
+    /** 
+     * @param spriteBatch
+     * @param target
+     * @param targetPos
+     * @param projectileImg
+     * @param movementLayer
+     * @return Projectile
+     */
     public Projectile shoot(SpriteBatch spriteBatch, Player target, Vector3 targetPos, Texture projectileImg, TiledMapTileLayer movementLayer) {
         System.out.println(name + " shoot");
         Projectile proj = new Projectile(new Sprite(projectileImg), movementLayer, this, target, targetPos, false);
@@ -79,12 +118,28 @@ public class College {
         return proj;
     }
 
+    
+    /** 
+     * @return float
+     */
     public float getX() {
         return (float) col * Play.TILE_SIZE;
     }
 
+    
+    /** 
+     * @return float
+     */
     public float getY() {
         return (float) row * Play.TILE_SIZE;
+    }
+
+    
+    /** 
+     * @param player
+     */
+    public void stopAttacking(Player player) {
+        player.beingAttacked = null;
     }
 
 }

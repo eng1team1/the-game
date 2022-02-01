@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.team1.game.screens.Play;
 
+/** Class for projectiles that will be fired from either college or player */
 public class Projectile extends Sprite {
 
     private TiledMapTileLayer movementLayer;
@@ -42,12 +43,21 @@ public class Projectile extends Sprite {
         startPos = new Vector3(getX(), getY(), 0);
     }
 
+    
+    /** 
+     * @param spriteBatch
+     */
     public void draw(SpriteBatch spriteBatch) {
         System.out.println("Projectile - draw");
         update(Gdx.graphics.getDeltaTime(), spriteBatch);
         super.draw(spriteBatch);
     }
 
+    
+    /** 
+     * @param delta
+     * @param spriteBatch
+     */
     public void update(float delta, SpriteBatch spriteBatch) {
         // projectile movement and stuff
         // System.out.println("projectile - update");
@@ -79,7 +89,7 @@ public class Projectile extends Sprite {
         if (norm.x >= 0 && norm.y >= 0) {
             if (getX() >= targetPos.x && getY() >= targetPos.y) {
                 if (sentByPlayer) {
-                    ((College) target).hit(((Player) sender).attackDmg);
+                    ((College) target).hit(((Player) sender).attackDmg, (Player) sender);
                     if (((College) target).isDestroyed) { 
                         System.out.println("Destroyed");
                         ((Player) sender).endCombat();
@@ -96,7 +106,7 @@ public class Projectile extends Sprite {
         } else if (norm.x >= 0 && norm.y <= 0) {
             if (getX() >= targetPos.x && getY() <= targetPos.y) { 
                 if (sentByPlayer) {
-                    ((College) target).hit(((Player) sender).attackDmg);
+                    ((College) target).hit(((Player) sender).attackDmg, (Player) sender);
                     if (((College) target).isDestroyed) { 
                         System.out.println("Destroyed");
                         ((Player) sender).endCombat();
@@ -113,7 +123,7 @@ public class Projectile extends Sprite {
         } else if (norm.x <= 0 && norm.y >= 0) {
             if (getX() <= targetPos.x && getY() >= targetPos.y) { 
                 if (sentByPlayer) {
-                    ((College) target).hit(((Player) sender).attackDmg);
+                    ((College) target).hit(((Player) sender).attackDmg, (Player) sender);
                     if (((College) target).isDestroyed) { 
                         System.out.println("Destroyed");
                         ((Player) sender).endCombat();
@@ -130,7 +140,7 @@ public class Projectile extends Sprite {
         } else if (norm.x <= 0 && norm.y <= 0) {
             if (getX() <= targetPos.x && getY() <= targetPos.y) {
                 if (sentByPlayer) {
-                    ((College) target).hit(((Player) sender).attackDmg);
+                    ((College) target).hit(((Player) sender).attackDmg, (Player) sender);
                     if (((College) target).isDestroyed) { 
                         System.out.println("Destroyed");
                         ((Player) sender).endCombat();

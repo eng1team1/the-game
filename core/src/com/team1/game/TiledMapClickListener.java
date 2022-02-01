@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.team1.game.entities.Player;
 import com.team1.game.screens.Play;
 
+/** Click listener for tiles on tiledmap */
 public class TiledMapClickListener extends ClickListener {
 
     private TiledMapActor actor;
@@ -25,6 +26,12 @@ public class TiledMapClickListener extends ClickListener {
         camera = playScreen.camera;
     }
 
+    
+    /** 
+     * @param event
+     * @param x
+     * @param y
+     */
     @Override
     public void clicked(InputEvent event, float x, float y) {
         // System.out.println(actor.cell + " has been clicked at X: " + x + " Y: " + y);
