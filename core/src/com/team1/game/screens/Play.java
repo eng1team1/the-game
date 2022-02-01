@@ -1,6 +1,7 @@
 package com.team1.game.screens;
  
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.ai.btree.decorator.Random;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -152,6 +153,10 @@ public class Play implements Screen {
                 colleges.get(i).stopAttacking(player);
                 colleges.remove(i);
             }
+        }
+
+        if (Gdx.input.isKeyJustPressed(Keys.ESCAPE)) {
+            game.setScreen(new Start(game));
         }
 
         if (player.getMoveFlag()) {
