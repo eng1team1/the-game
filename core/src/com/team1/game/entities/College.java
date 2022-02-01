@@ -35,8 +35,8 @@ public class College {
 
     
     /** 
-     * @param col
-     * @param row
+     * @param col : Column college is in
+     * @param row : Row the college is in
      */
     public void setTilePos(int col, int row) {
         this.col = col;
@@ -61,8 +61,8 @@ public class College {
 
     
     /** 
-     * @param dmg
-     * @param player
+     * @param dmg : the damage the college will take when hit
+     * @param player : hte player the damage will come from, will be used to add plunder to player
      */
     public void hit(int dmg, Player player) {
         health -= dmg;
@@ -76,8 +76,10 @@ public class College {
 
     
     /** 
-     * @param player
-     * @return boolean
+     * Testing to see if the player is in attack range
+     * 
+     * @param player : The player
+     * @return boolean : true if college can attack player, false otherwise
      */
     public boolean playerInRange(Player player) {
         int playerCol = Math.round(Math.round(player.getX()) / Play.TILE_SIZE);
@@ -94,7 +96,9 @@ public class College {
 
     
     /** 
-     * @param player
+     * Tell teh player they are being attacked to update in the render method
+     * 
+     * @param player : player beinng attacked
      */
     public void attack(Player player) {
         System.out.println(name + " attacking player");
@@ -104,12 +108,14 @@ public class College {
 
     
     /** 
-     * @param spriteBatch
-     * @param target
-     * @param targetPos
-     * @param projectileImg
-     * @param movementLayer
-     * @return Projectile
+     * 
+     * 
+     * @param spriteBatch : spriteBatch used to draw projectile
+     * @param target : The college the projectile is aimed at
+     * @param targetPos : The position of the target
+     * @param projectileImg : Image of projectile - could make them unique for each college for ease of identification
+     * @param movementLayer : Needed for projectile
+     * @return Projectile : returns the projectile that was just created and 'shot'
      */
     public Projectile shoot(SpriteBatch spriteBatch, Player target, Vector3 targetPos, Texture projectileImg, TiledMapTileLayer movementLayer) {
         System.out.println(name + " shoot");
@@ -136,7 +142,7 @@ public class College {
 
     
     /** 
-     * @param player
+     * @param player : player that will stop being attacked
      */
     public void stopAttacking(Player player) {
         player.beingAttacked = null;

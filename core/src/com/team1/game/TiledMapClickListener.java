@@ -44,7 +44,7 @@ public class TiledMapClickListener extends ClickListener {
             player.setMoveFlag(true);
         }
 
-        // Checking if tile is college
+        // Checking if tile is college, if so player start attacking
         if (actor.cell.getTile().getProperties().containsKey("college")) {
             System.out.println("clicked college");
             System.out.println(player.canReach(pos));

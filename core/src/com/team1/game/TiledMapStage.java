@@ -25,6 +25,8 @@ public class TiledMapStage extends Stage {
     }
 
     /** 
+     * Creating actor for each cell in tiled map
+     * 
      * @param tiledLayer
      * @param player
      */

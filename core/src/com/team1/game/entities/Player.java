@@ -62,7 +62,9 @@ public class Player extends Sprite {
 
     
     /** 
-     * @param mousePos
+     * Will move the sprite of the player to the tile located at mousePos
+     * 
+     * @param mousePos : The position where the mouse clicked the tile
      */
     public void moveTo(Vector3 mousePos) {
         // might want to use https://github.com/xaguzman/pathfinding for pathfinding, would have to reconfigure some of the tiledmap stuff but its just different classes
@@ -85,8 +87,10 @@ public class Player extends Sprite {
 
     
     /** 
-     * @param pos
-     * @return boolean
+     * Tetsing to see if player can reach new position, pos
+     * 
+     * @param pos : Position that player wants to reach
+     * @return boolean : true if player can reach, false otherwise
      */
     public boolean canReach(Vector3 pos) {
         int col = Math.round(Math.round(pos.x) / Play.TILE_SIZE);
@@ -106,7 +110,7 @@ public class Player extends Sprite {
     
     
     /** 
-     * @param flag
+     * @param flag : will player move
      */
     public void setMoveFlag(boolean flag) {
         moveFlag = flag;
@@ -114,7 +118,7 @@ public class Player extends Sprite {
 
     
     /** 
-     * @return boolean
+     * @return boolean : players moveFlag
      */
     public boolean getMoveFlag() {
         return moveFlag;
@@ -122,8 +126,8 @@ public class Player extends Sprite {
 
     
     /** 
-     * @param collegeCell
-     * @param targetPos
+     * @param collegeCell : the cell of the college that the player wants to attack
+     * @param targetPos : The position of the college that the user wants to attack
      */
     public void startCombat(Cell collegeCell, Vector3 targetPos) {
         inCombat = true;
@@ -133,10 +137,10 @@ public class Player extends Sprite {
 
     
     /** 
-     * @param spriteBatch
-     * @param target
-     * @param targetPos
-     * @return Projectile
+     * @param spriteBatch : spriteBatch used to draw projectile
+     * @param target : The college the projectile is aimed at
+     * @param targetPos : The position of the target
+     * @return Projectile : returns the projectile that was just created and 'shot'
      */
     public Projectile shoot(SpriteBatch spriteBatch, College target, Vector3 targetPos) {
         System.out.println("shoot");
@@ -167,7 +171,7 @@ public class Player extends Sprite {
 
     
     /** 
-     * @param dmg
+     * @param dmg : the damage the player will take from being hit
      */
     public void hit(int dmg) {
         health -= dmg;

@@ -45,7 +45,7 @@ public class Projectile extends Sprite {
 
     
     /** 
-     * @param spriteBatch
+     * @param spriteBatch : spriteBatch that will be used to draw projectile
      */
     public void draw(SpriteBatch spriteBatch) {
         System.out.println("Projectile - draw");
@@ -55,6 +55,8 @@ public class Projectile extends Sprite {
 
     
     /** 
+     * What is called every time reender is called in PLay
+     * 
      * @param delta
      * @param spriteBatch
      */
