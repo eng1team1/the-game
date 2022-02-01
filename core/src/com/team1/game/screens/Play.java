@@ -91,7 +91,7 @@ public class Play implements Screen {
         initColleges(movementLayer);
 
         java.util.Random rand = new java.util.Random();
-        objective = colleges.get(rand.nextInt(3));
+        objective = colleges.get(1); // colleges.get(rand.nextInt(3));
 
         for (College c : colleges) {
             System.out.println(c.getCell());
@@ -219,7 +219,7 @@ public class Play implements Screen {
             // System.out.println("time until next attack: " + timeUntilNextAttack);
             if (timeUntilNextAttack <= 0 && !target.isDestroyed) {
                 renderer.getBatch().begin();
-                System.out.println("target: " + target);
+                System.out.println("target: " + target.name);
                 Projectile proj = player.shoot((SpriteBatch) renderer.getBatch(), target, combat.getTargetPos());
                 renderer.getBatch().end();
                 projectilesOnScreen.add(proj);
@@ -266,6 +266,10 @@ public class Play implements Screen {
 
         if (player.isDestroyed) {
             game.setScreen(new GameOver(game, false));
+        }
+
+        if (objective.isDestroyed) {
+            game.setScreen(new GameOver(game, true));
         }
 
         if (showStartInstructions) {

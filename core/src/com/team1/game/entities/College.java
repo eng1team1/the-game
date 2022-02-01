@@ -119,6 +119,8 @@ public class College {
      */
     public Projectile shoot(SpriteBatch spriteBatch, Player target, Vector3 targetPos, Texture projectileImg, TiledMapTileLayer movementLayer) {
         System.out.println(name + " shoot");
+        System.out.println("targetPos: " + targetPos);
+        System.out.println("currPos: (" + getX() + ", " + getY() + ")");
         Projectile proj = new Projectile(new Sprite(projectileImg), movementLayer, this, target, targetPos, false);
         proj.draw(spriteBatch);
         return proj;

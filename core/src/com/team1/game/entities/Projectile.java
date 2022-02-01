@@ -82,6 +82,8 @@ public class Projectile extends Sprite {
 
         // System.out.println("(" + (((Player) target).getX() + Play.TILE_SIZE / 2) + ", " + (((Player) target).getY() + Play.TILE_SIZE / 2) + ") :: " + targetPos + " :: " + currPos);
 
+        // System.out.println("norm: " + norm);
+
         // Need to check if player is target as if so then delete projectile if player moves.
         if (!sentByPlayer) {
             if ((((Player) target).getX() + Play.TILE_SIZE / 2) != targetPos.x || (((Player) target).getY() + Play.TILE_SIZE / 2) != targetPos.y) {
@@ -143,6 +145,7 @@ public class Projectile extends Sprite {
             if (getX() <= targetPos.x && getY() <= targetPos.y) {
                 if (sentByPlayer) {
                     ((College) target).hit(((Player) sender).attackDmg, (Player) sender);
+                    System.out.println("hit");
                     if (((College) target).isDestroyed) { 
                         System.out.println("Destroyed");
                         ((Player) sender).endCombat();
@@ -153,7 +156,7 @@ public class Projectile extends Sprite {
                         System.out.println("Destroyed");
                     }
                 }
-                    
+                
                 shouldRemove = true;
             }
         }
